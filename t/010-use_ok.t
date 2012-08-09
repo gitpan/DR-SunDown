@@ -6,7 +6,7 @@ use utf8;
 use open qw(:std :utf8);
 use lib qw(lib ../lib);
 
-use Test::More tests    => 16;
+use Test::More tests    => 19;
 use Encode qw(decode encode);
 
 
@@ -36,3 +36,9 @@ like $html, qr{<strong>.*</strong>}s, 'strong';
 
 is markdown2html(''), '', "markdown2html('')";
 is markdown2html(undef), undef, 'markdown2html(undef)';
+
+like markdown2html('# привет'), qr{<h1>\s*привет\s*</h1>}, 'utf8 strings';
+$data = encode utf8 => '## медвед';
+like markdown2html($data), eval { no utf8; qr{<h2>\s*медвед\s*</h2>} },
+    'no utf8 strings';
+unlike markdown2html($data), qr{<h2>\s*медвед\s*</h2>}, 'no utf8 strings';

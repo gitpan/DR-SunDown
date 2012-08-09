@@ -8,10 +8,28 @@ DR::SunDown - perl bindings for sundown
     my $markdown = `cat README.markdown`;
     my $html = markdown2html $markdown;
 
+=head2 utf8
+
+The converter returns utf8-strings if it receives utf8-strings.
+
+    use Encode 'encode', 'decode';
+
+    # $string is encoded utf8
+    my $string = markdown2html encode utf8 => $data;
+
+    # $string and $data have the same utf8 flag
+    my $string = markdown2html $data;
+
+    utf8::decode( $data ) if utf8::is_utf8( $data );
+    # $string is decoded utf8
+    my $string = markdown2html $data;
+
+
 =head1 DESCRIPTION
 
 The library is a perl binding for C-library
 L<sundown|https://github.com/vmg/sundown.git>.
+
 
 =head1 EXPORTS
 
@@ -34,12 +52,11 @@ at your option, any later version of Perl 5 you may have available.
 package DR::SunDown;
 use Carp ();
 use base qw(Exporter);
-our $VERSION = '0.01';
-
+our $VERSION = '0.02';
 our @EXPORT = qw(markdown2html);
-
 
 require XSLoader;
 XSLoader::load('DR::SunDown', $VERSION);
+
 1;
 
